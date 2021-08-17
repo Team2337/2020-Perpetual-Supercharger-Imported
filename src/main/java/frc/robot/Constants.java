@@ -37,6 +37,26 @@ public final class Constants {
     /* --------------- */
     /*******************/
 
+  public static final int MODULE0_DRIVE_MOTOR_ID = 0;
+  public static final int MODULE0_ANGLE_MOTOR_ID = 4;
+  public static final int MODULE0_ANGLE_CANCODER_ID = 1;
+  public static final double MODULE0_ANGLE_OFFSET = 0; //TODO: Add this value
+
+  public static final int MODULE1_DRIVE_MOTOR_ID = 1;
+  public static final int MODULE1_ANGLE_MOTOR_ID = 5;
+  public static final int MODULE1_ANGLE_CANCODER_ID = 2;
+  public static final double MODULE1_ANGLE_OFFSET = 0; //TODO: Add this value
+
+  public static final int MODULE2_DRIVE_MOTOR_ID = 14;
+  public static final int MODULE2_ANGLE_MOTOR_ID = 10;
+  public static final int MODULE2_ANGLE_CANCODER_ID = 3;
+  public static final double MODULE2_ANGLE_OFFSET = 0; //TODO: Add this value
+
+  public static final int MODULE3_DRIVE_MOTOR_ID = 15;
+  public static final int MODULE3_ANGLE_MOTOR_ID = 11;
+  public static final int MODULE3_ANGLE_CANCODER_ID = 4;
+  public static final double MODULE3_ANGLE_OFFSET = 0; //TODO: Add this value
+
     public static int CANID0;
     public static int MODULE0DRIVEMOTORID = 0;
     public static int MODULE1DRIVEMOTORID = 1;
@@ -269,22 +289,41 @@ public final class Constants {
      */
     public Constants() {
         if(Robot.isComp) {
-            MODULE0DRIVEMOTORID = 0;
-            MODULE1DRIVEMOTORID = 1;
+   final int MODULE0_DRIVE_MOTOR_ID = 0;
+   final int MODULE0_ANGLE_MOTOR_ID = 4;
+    final int MODULE0_ANGLE_CANCODER_ID = 1;
+    final double MODULE0_ANGLE_OFFSET =  -177.363; //-230.801;
+
+    final int MODULE1_DRIVE_MOTOR_ID = 1;
+    final int MODULE1_ANGLE_MOTOR_ID = 5;
+    final int MODULE1_ANGLE_CANCODER_ID = 2;
+    final double MODULE1_ANGLE_OFFSET = -177; //-36.826;
+
+    final int MODULE2_DRIVE_MOTOR_ID = 14;
+    final int MODULE2_ANGLE_MOTOR_ID = 10;
+    final int MODULE2_ANGLE_CANCODER_ID = 3;
+    final double MODULE2_ANGLE_OFFSET = 0; //-346.992;
+
+    final int MODULE3_DRIVE_MOTOR_ID = 15;
+    final int MODULE3_ANGLE_MOTOR_ID = 11;
+    final int MODULE3_ANGLE_CANCODER_ID = 4;
+    final double MODULE3_ANGLE_OFFSET = 0; //-15.557;
+            //MODULE0DRIVEMOTORID = 0;
+            //MODULE1DRIVEMOTORID = 1;
             SHOOTERRIGHTMOTOR = 2;
             SHOOTERLEFTMOTOR = 3;
-            MODULE0ANGLEMOTORID = 4;
-            MODULE1ANGLEMOTORID = 5;
+            //MODULE0ANGLEMOTORID = 4;
+            //MODULE1ANGLEMOTORID = 5;
             KICKER = 6;
             //Limelight = 7
             INTAKE = 8;
             AGITATOR = 9;
-            MODULE2ANGLEMOTORID = 10;
-            MODULE3ANGLEMOTORID = 11;
+            //MODULE2ANGLEMOTORID = 10;
+            //MODULE3ANGLEMOTORID = 11;
             SERIALIZER = 12;
             CLIMBER = 13;
-            MODULE2DRIVEMOTORID = 14;
-            MODULE3DRIVEMOTORID = 15;
+            //MODULE2DRIVEMOTORID = 14;
+            //MODULE3DRIVEMOTORID = 15;
 
             /* --- Kicker --- */
             KICKERSPEEDCLOSE = 7000; 

@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Utilities;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 
 /**
  * Swerve Module Object used to run the calculations for the swerve drive
@@ -30,6 +32,8 @@ public class FXSwerveModule {
 
     /** The angle offset from the zero position on the angle motor in RADIANS */
     private double angleMotorOffset;
+
+    private double angleMotorOffsetRadians;
     
     /**
      * The error of the previous iteration of the angle calculations
@@ -346,7 +350,10 @@ public class FXSwerveModule {
         
         /* --- Set Amperage Limits --- */
         angleMotor.configStatorCurrentLimit(currentLimitConfigurationAngle, 0);
-        driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0);        
+        driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0); 
+        
+        
+        angleMotorOffsetRadians = angleMotorOffset * (Math.PI / 180);
     }
 
 
@@ -378,7 +385,7 @@ public class FXSwerveModule {
     public double getNormalizedAnalogVoltage() {
         SmartDashboard.putNumber("Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition());
         SmartDashboard.putNumber("Mod of Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition()%360);
-        SmartDashboard.putNumber("Normalized CAN", Utilities.scaleToRange(CANAngleSensor.getAbsolutePosition(), 0, 360, 0, 1));
+        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(CANAngleSensor.getAbsolutePosition(), -360, 0, 0, 1));
         return Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360,0, 0, 1); 
         
     }
@@ -403,7 +410,7 @@ public class FXSwerveModule {
      * @return - Double value adds the angle offset 
      */
     public double adjustAngleWithOffset() {
-        return (getNormalizedAnalogVoltageRadians() + this.angleMotorOffset) % (2 * Math.PI);
+        return (getNormalizedAnalogVoltageRadians() + angleMotorOffsetRadians) % (2 * Math.PI);
     }
 
     /**

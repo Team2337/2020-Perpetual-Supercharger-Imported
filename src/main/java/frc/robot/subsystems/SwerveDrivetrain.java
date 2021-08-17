@@ -106,7 +106,7 @@ public class SwerveDrivetrain extends SubsystemBase {
         -1.193802 + Math.PI,   // Module 2 
         -0.746431 - Math.PI / 2   // Module 3  */
         5.38,//4.6599803,//4.6524127,
-        0.87 + Math.PI, // 3.8954300 //3.8795141 //4.02862
+        1.37 + Math.PI, // 3.8954300 //3.8795141 //4.02862
         3.29 + Math.PI, // 2.0473980 //2.0331746
         1.25 //6.211150//0.3951469//0.3950974
       };
@@ -129,10 +129,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     /* --- Array for modules --- */
     swerveModules = new FXSwerveModule[] {
-      new FXSwerveModule(0, new TalonFX(Constants.MODULE0DRIVEMOTORID), new TalonFX(Constants.MODULE0ANGLEMOTORID), angleOffsets[0], CANAngleSensors[0]), // Module 0
-      new FXSwerveModule(1, new TalonFX(Constants.MODULE1DRIVEMOTORID), new TalonFX(Constants.MODULE1ANGLEMOTORID), angleOffsets[1], CANAngleSensors[1]), // Module 1
-      new FXSwerveModule(2, new TalonFX(Constants.MODULE2DRIVEMOTORID), new TalonFX(Constants.MODULE2ANGLEMOTORID), angleOffsets[2], CANAngleSensors[2]), // Module 2
-      new FXSwerveModule(3, new TalonFX(Constants.MODULE3DRIVEMOTORID), new TalonFX(Constants.MODULE3ANGLEMOTORID), angleOffsets[3], CANAngleSensors[3])  // Module 3
+      new FXSwerveModule(0, new TalonFX(Constants.MODULE0_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE0_ANGLE_MOTOR_ID), Constants.MODULE0_ANGLE_OFFSET, new CANCoder(Constants.MODULE0_ANGLE_CANCODER_ID)), // Module 0
+      new FXSwerveModule(1, new TalonFX(Constants.MODULE1_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE1_ANGLE_MOTOR_ID), Constants.MODULE1_ANGLE_OFFSET, new CANCoder(Constants.MODULE1_ANGLE_CANCODER_ID)), // Module 1
+      new FXSwerveModule(2, new TalonFX(Constants.MODULE2_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE2_ANGLE_MOTOR_ID), Constants.MODULE2_ANGLE_OFFSET, new CANCoder(Constants.MODULE2_ANGLE_CANCODER_ID)), // Module 2
+      new FXSwerveModule(3, new TalonFX(Constants.MODULE3_DRIVE_MOTOR_ID), new TalonFX(Constants.MODULE3_ANGLE_MOTOR_ID), Constants.MODULE3_ANGLE_OFFSET, new CANCoder(Constants.MODULE3_ANGLE_CANCODER_ID))  // Module 3
     };
 
     // Setup for drive motor inversion (They may not need to be inverted)
