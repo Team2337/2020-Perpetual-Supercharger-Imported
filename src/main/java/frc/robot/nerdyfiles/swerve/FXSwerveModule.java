@@ -80,20 +80,20 @@ public class FXSwerveModule {
      * Proportional value for the angle motor speed
      * This is used to scale the error to a funcitonal speed for the motors
      */
-    private double angleP = 0.63;
+    private double angleP = 0.06; //0.63
     
     /**
      * Derivative value for the angle motor speed
      * This is added to the speed of the motors to increase power at 
      * smaller errors
      */
-    private double angleD = 0.02;
+    private double angleD = 0.02; //0.02
     
     /** Sets the max speed for the drive motors */
     private double driveMaxSpeed = 1.0;
 
     private int angleAllowableClosedloopError = 5;
-    private double talonAngleP = 2.5;
+    private double talonAngleP = 1; //2.5
     private double talonAngleI = 0;
     private double talonAngleD = 0;
     private double talonAngleF = 0;
@@ -354,6 +354,7 @@ public class FXSwerveModule {
         
         
         angleMotorOffsetRadians = angleMotorOffset * (Math.PI / 180);
+
     }
 
 
@@ -385,8 +386,9 @@ public class FXSwerveModule {
     public double getNormalizedAnalogVoltage() {
         SmartDashboard.putNumber("Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition());
         SmartDashboard.putNumber("Mod of Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition()%360);
-        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(CANAngleSensor.getAbsolutePosition(), -360, 0, 0, 1));
-        return Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360,0, 0, 1); 
+        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), 0, -360, 0, 1));
+        SmartDashboard.putNumber("Angle In Radians/" + moduleNumber, angleMotorOffsetRadians);
+        return Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), 0,-360, 0, 1); 
         
     }
 
@@ -396,6 +398,7 @@ public class FXSwerveModule {
      * @return - double angle value in RADIANS
      */
     public double getNormalizedAnalogVoltageRadians() {
+        SmartDashboard.putNumber("getNormalizedAnalogVoltage/" + moduleNumber, getNormalizedAnalogVoltage() * (2 * Math.PI));
         return getNormalizedAnalogVoltage() * (2 * Math.PI);
     }
 
@@ -425,7 +428,7 @@ public class FXSwerveModule {
         double currentAngle = getNormalizedAnalogVoltageRadians();
 
         // Adds angle offset to target angle
-        targetAngle = (targetAngle + this.angleMotorOffset) % (2 * Math.PI);
+        targetAngle = (targetAngle + this.angleMotorOffsetRadians) % (2 * Math.PI);
 
         // Calculates error
         errorRad = (currentAngle - targetAngle + (2*Math.PI)) % (2*Math.PI);
@@ -463,7 +466,8 @@ public class FXSwerveModule {
      * @param speed - double value to set the speed to the angle motor (-1 -> 1)
      */
     public void setAngleMotorSpeed(double speed) {
-        angleMotor.set(ControlMode.PercentOutput, speed);
+        //angleMotor.set(ControlMode.PercentOutput, speed);
+        angleMotor.set(ControlMode.Position, 1024);
     }
 
     /**

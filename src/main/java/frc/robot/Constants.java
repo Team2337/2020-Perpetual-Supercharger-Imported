@@ -40,22 +40,22 @@ public final class Constants {
   public static final int MODULE0_DRIVE_MOTOR_ID = 0;
   public static final int MODULE0_ANGLE_MOTOR_ID = 4;
   public static final int MODULE0_ANGLE_CANCODER_ID = 1;
-  public static final double MODULE0_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE0_ANGLE_OFFSET = -170.508; //TODO: Add this value
 
   public static final int MODULE1_DRIVE_MOTOR_ID = 1;
   public static final int MODULE1_ANGLE_MOTOR_ID = 5;
   public static final int MODULE1_ANGLE_CANCODER_ID = 2;
-  public static final double MODULE1_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE1_ANGLE_OFFSET = -177; //TODO: Add this value
 
   public static final int MODULE2_DRIVE_MOTOR_ID = 14;
   public static final int MODULE2_ANGLE_MOTOR_ID = 10;
   public static final int MODULE2_ANGLE_CANCODER_ID = 3;
-  public static final double MODULE2_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE2_ANGLE_OFFSET = -259.805; //TODO: Add this value
 
   public static final int MODULE3_DRIVE_MOTOR_ID = 15;
   public static final int MODULE3_ANGLE_MOTOR_ID = 11;
   public static final int MODULE3_ANGLE_CANCODER_ID = 4;
-  public static final double MODULE3_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE3_ANGLE_OFFSET = -98.701; //TODO: Add this value
 
     public static int CANID0;
     public static int MODULE0DRIVEMOTORID = 0;
@@ -289,6 +289,7 @@ public final class Constants {
      */
     public Constants() {
         if(Robot.isComp) {
+    /*
    final int MODULE0_DRIVE_MOTOR_ID = 0;
    final int MODULE0_ANGLE_MOTOR_ID = 4;
     final int MODULE0_ANGLE_CANCODER_ID = 1;
@@ -307,7 +308,7 @@ public final class Constants {
     final int MODULE3_DRIVE_MOTOR_ID = 15;
     final int MODULE3_ANGLE_MOTOR_ID = 11;
     final int MODULE3_ANGLE_CANCODER_ID = 4;
-    final double MODULE3_ANGLE_OFFSET = 0; //-15.557;
+    final double MODULE3_ANGLE_OFFSET = 0; //-15.557; */
             //MODULE0DRIVEMOTORID = 0;
             //MODULE1DRIVEMOTORID = 1;
             SHOOTERRIGHTMOTOR = 2;
