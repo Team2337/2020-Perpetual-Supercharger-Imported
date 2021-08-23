@@ -444,6 +444,7 @@ public class FXSwerveModule {
             driveMotor.setInverted(false);
         }
 
+
         // Converts the error to be in terms of quadrents and removes edge cases
         if(errorRad > Math.PI/2 && errorRad < Math.PI) {
             errorRad -= Math.PI;
@@ -451,19 +452,31 @@ public class FXSwerveModule {
             errorRad += Math.PI;
         }
 
+
+/*
         // Calculates the speed of the angle motor using a derivative
         double d = Robot.Utilities.calculateDerivative(errorRad, lastError, 0.02);
         lastError = errorRad;
         double speed = (errorRad * angleP) + (d * angleD);
         setAngleMotorSpeed(speed);
+        */
+         double targetInRadians = (currentAngle + errorRad) % (Math.PI*2) ;
+
+        //Convert radians into factor of 4096 to match the encoder
+
+       double target = ((targetInRadians * 4096) / (Math.PI*2));
+
+        setAngleMotorSpeed(target);
+
     }
 
     /**
      * Sets the speed of the module angle motor
      * @param speed - double value to set the speed to the angle motor (-1 -> 1)
      */
-    public void setAngleMotorSpeed(double speed) {
-        angleMotor.set(ControlMode.PercentOutput, speed);
+    public void setAngleMotorSpeed(double target) {
+        //angleMotor.set(ControlMode.PercentOutput, speed);
+        angleMotor.set(ControlMode.Position, target);
     }
 
     /**
