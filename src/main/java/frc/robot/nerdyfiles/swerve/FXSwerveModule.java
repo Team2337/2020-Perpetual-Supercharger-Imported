@@ -47,7 +47,7 @@ public class FXSwerveModule {
      * This will reduce the oscillation on the angle motor
      * when within +- 3 degrees of the target
      */
-    private double allowableErrorDegree = 3;
+    private double allowableErrorDegree = 0.01;
 
     /**
      * Proportional value for the drive motor speed
@@ -92,8 +92,8 @@ public class FXSwerveModule {
     /** Sets the max speed for the drive motors */
     private double driveMaxSpeed = 1.0;
 
-    private int angleAllowableClosedloopError = 5;
-    private double talonAngleP = 2.5;
+    private int angleAllowableClosedloopError = 0;
+    private double talonAngleP = 0.4;
     private double talonAngleI = 0;
     private double talonAngleD = 0;
     private double talonAngleF = 0;
@@ -130,122 +130,7 @@ public class FXSwerveModule {
     private TalonFXConfiguration TalonFXConfigurationDrive;
 
 
-    /**
-     * Swerve Module Object used to run the calculations for the swerve drive
-     * The swerve module uses joystick values from the command to change the 
-     * angle and drive positions
-     * This Object uses the TalonFX's for both the angle motor and drive motor
-     * Both will need to be passed in when the object is created
-     * @see SwerveDriveCommand
-     * @param moduleNumber - int Module ID to call each module (not CAN IDs)
-     * @param driveMotor - TalonFX motor Object with CAN ID of the module's drive motor
-     * @param angleMotor - TalonFX motor Object with CAN ID of the module's angle motor
-     * @param angleMotorOffset - double value indicating the angle offset for the current module
-     * @param analogAngleSensor - AnalogInput sensor Object with the Analog Port of the current module
-     */
-    public FXSwerveModule(int moduleNumber, TalonFX driveMotor, TalonFX angleMotor, double angleMotorOffset, AnalogInput analogAngleSensor) {
-        this.moduleNumber = moduleNumber;
-        this.driveMotor = driveMotor;
-        this.angleMotor = angleMotor;
-        this.angleMotorOffset = angleMotorOffset;
-        this.analogAngleSensor = analogAngleSensor;
-        TalonFXConfigurationDrive = new TalonFXConfiguration();
-        TalonFXConfigurationAngle = new TalonFXConfiguration();
-
-        /* --- Set Factory Default --- */
-
-        // Resets the angle motor to its factory default
-        angleMotor.configFactoryDefault();
-        // Resets the drive motor to its factory default
-        driveMotor.configFactoryDefault();
-        
-        /*****************************/
-        /* ------------------------- */
-        /* --- Angle Motor Setup --- */
-        /* ------------------------- */
-        /*****************************/
-
-        angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-        angleMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-                
-        angleMotor.setNeutralMode(NeutralMode.Coast);
-        angleMotor.configOpenloopRamp(0.1); 
-        angleMotor.setSensorPhase(false);
-        angleMotor.setInverted(false);
-
-        TalonFXConfigurationAngle.slot0.kP = talonAngleP;
-        TalonFXConfigurationAngle.slot0.kI = talonAngleI;
-        TalonFXConfigurationAngle.slot0.kD = talonAngleD;
-        TalonFXConfigurationAngle.slot0.kF = talonAngleF;
-        TalonFXConfigurationAngle.slot0.allowableClosedloopError = angleAllowableClosedloopError;
-        TalonFXConfigurationAngle.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        TalonFXConfigurationAngle.feedbackNotContinuous = true;
-        TalonFXConfigurationAngle.integratedSensorOffsetDegrees = angleEncoderOffset / 5.6888;
-        TalonFXConfigurationAngle.openloopRamp = 0.15;
-
-        angleMotor.configAllSettings(TalonFXConfigurationAngle); 
-        /*****************************/
-        /* ------------------------- */
-        /* --- Drive Motor Setup --- */
-        /* ------------------------- */
-        /*****************************/
-
-        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-        driveMotor.configClosedloopRamp(0.1);
-        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, 0);
-        driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, 0);
-
-        /* --- Drive PID --- */
-        driveMotor.config_kP(0, driveP, 0);
-        driveMotor.config_kI(0, driveI, 0);
-        driveMotor.config_kD(0, driveD, 0);
-        driveMotor.config_kF(0, driveF, 0);
-
-        /* --- Talon FX Drive Configurations --- */
-        TalonFXConfigurationDrive.slot0.kP = driveP;
-        TalonFXConfigurationDrive.slot0.kI = driveI;
-        TalonFXConfigurationDrive.slot0.kD = driveD;
-        TalonFXConfigurationDrive.slot0.kF = driveF;
-        TalonFXConfigurationDrive.peakOutputForward = driveMaxSpeed;
-        TalonFXConfigurationDrive.peakOutputReverse = -driveMaxSpeed;
-        TalonFXConfigurationDrive.slot0.allowableClosedloopError = 100;
-        TalonFXConfigurationDrive.closedloopRamp = 0.55;
-        TalonFXConfigurationDrive.openloopRamp = 0.2;
-
-        driveMotor.configAllSettings(TalonFXConfigurationDrive);
-
-        /* --- Motion Magic --- */
-        // Sets the velocity & accelaration for the motion magic mode 
-        driveMotor.configMotionCruiseVelocity(640, 0);
-        driveMotor.configMotionAcceleration(200, 0);
-
-        // Sets how the motor will react when there is no power applied to the motor
-        driveMotor.setNeutralMode(NeutralMode.Coast);
-
-        /* --- Setup Angle Current Limits --- */
-        // Sets the current limit for the angle motor
-        currentLimitConfigurationAngle.currentLimit = 50;
-        // Enables the current limit
-        currentLimitConfigurationAngle.enable = true;
-        // Sets the minimum current reading needed in order to initiate the current reading
-        currentLimitConfigurationAngle.triggerThresholdCurrent = 40;
-        // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
-        currentLimitConfigurationAngle.triggerThresholdTime = 3;
-
-        /* --- Setup Drive Current Limit --- */
-        // Sets the current limit for the drive motor
-        currentLimitConfigurationDrive.currentLimit = 50;
-        // Enables the current limit
-        currentLimitConfigurationDrive.enable = true;
-        // Sets the minimum current reading needed in order to initiate the current reading
-        currentLimitConfigurationDrive.triggerThresholdCurrent = 40;
-        // Sets the minimum amount of time beyond the trigger threshold reading needed in order to initiate the current reading
-        currentLimitConfigurationDrive.triggerThresholdTime = 3;
-        
-        /* --- Set Amperage Limits --- */
-        angleMotor.configStatorCurrentLimit(currentLimitConfigurationAngle, 0);
-        driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0);        
-    }
+ 
 
 
     public FXSwerveModule(int moduleNumber, TalonFX driveMotor, TalonFX angleMotor, double angleMotorOffset, CANCoder CANAngleSensor) {
@@ -353,7 +238,7 @@ public class FXSwerveModule {
         driveMotor.configStatorCurrentLimit(currentLimitConfigurationDrive, 0); 
         
         
-        angleMotorOffsetRadians = angleMotorOffset * (Math.PI / 180);
+        angleMotorOffsetRadians = angleMotorOffset;
     }
 
 
@@ -385,7 +270,7 @@ public class FXSwerveModule {
     public double getNormalizedAnalogVoltage() {
         SmartDashboard.putNumber("Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition());
         SmartDashboard.putNumber("Mod of Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition()%360);
-        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(CANAngleSensor.getAbsolutePosition(), -360, 0, 0, 1));
+        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360, 0, 0, 1));
         return Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360,0, 0, 1); 
         
     }
@@ -396,6 +281,7 @@ public class FXSwerveModule {
      * @return - double angle value in RADIANS
      */
     public double getNormalizedAnalogVoltageRadians() {
+        SmartDashboard.putNumber("getNormalizedAnalogVoltage/" + moduleNumber, getNormalizedAnalogVoltage() * (2 * Math.PI));
         return getNormalizedAnalogVoltage() * (2 * Math.PI);
     }
 
@@ -417,25 +303,29 @@ public class FXSwerveModule {
      * Takes the desired angle, and the current angle and computes the delta (current - target)
      * to set the speed to the angle motors to move the module to the 
      * desired angle, without overshooting. 
-     * @param targetAngle - double value in radians
+     * @param targetAngle - double value in radians, -PI to PI
      */
     public void setModuleAngle(double targetAngle) {
         /* --- Local Variables --- */
         double errorRad;
         double currentAngle = getNormalizedAnalogVoltageRadians();
+        //double currentAngle = adjustAngleWithOffset();
+        targetAngle = 0.84;
 
         // Adds angle offset to target angle
-        targetAngle = (targetAngle + this.angleMotorOffset) % (2 * Math.PI);
+        //targetAngle = (targetAngle + this.angleMotorOffset) % (2 * Math.PI);
+        SmartDashboard.putNumber("targetAngle/" + moduleNumber, targetAngle);
 
-        // Calculates error
+        // Calculates error, 0 to 2PI
         errorRad = (currentAngle - targetAngle + (2*Math.PI)) % (2*Math.PI);
         // Sets error to error deadband
-        errorRad = Math.abs(errorRad) < Math.toRadians(allowableErrorDegree) ? 0 : errorRad;
-
+        //errorRad = Math.abs(errorRad) < Math.toRadians(allowableErrorDegree) ? 0 : errorRad;
+        
         // Puts error behind current position if greater than PI
         if (errorRad > Math.PI) {
             errorRad -= (Math.PI*2);
         } 
+        
         
         // Makes decsion on whether or not to invert drive motors
         if (errorRad > Math.PI/2 || errorRad < -Math.PI/2) {
@@ -460,13 +350,17 @@ public class FXSwerveModule {
         double speed = (errorRad * angleP) + (d * angleD);
         setAngleMotorSpeed(speed);
         */
-         double targetInRadians = (currentAngle + errorRad) % (Math.PI*2) ;
+        SmartDashboard.putNumber("currentAngle/" + moduleNumber, currentAngle);
+
+         double targetInRadians = ((currentAngle - errorRad) + (2 * Math.PI)) % (Math.PI*2) ;
+         SmartDashboard.putNumber("targetInRadians/" + moduleNumber, targetInRadians);
 
         //Convert radians into factor of 4096 to match the encoder
 
-       double target = ((targetInRadians * 4096) / (Math.PI*2));
+       double targetTwo = ((targetInRadians * 4096) / (Math.PI*2));
+       SmartDashboard.putNumber("targetTwo/" + moduleNumber, targetTwo);
 
-        setAngleMotorSpeed(target);
+        setAngleMotorSpeed(targetTwo);
 
     }
 

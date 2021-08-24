@@ -40,7 +40,7 @@ public final class Constants {
   public static final int MODULE0_DRIVE_MOTOR_ID = 0;
   public static final int MODULE0_ANGLE_MOTOR_ID = 4;
   public static final int MODULE0_ANGLE_CANCODER_ID = 1;
-  public static final double MODULE0_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE0_ANGLE_OFFSET = 1.6606; //TODO: Add this value
 
   public static final int MODULE1_DRIVE_MOTOR_ID = 1;
   public static final int MODULE1_ANGLE_MOTOR_ID = 5;
@@ -50,12 +50,12 @@ public final class Constants {
   public static final int MODULE2_DRIVE_MOTOR_ID = 14;
   public static final int MODULE2_ANGLE_MOTOR_ID = 10;
   public static final int MODULE2_ANGLE_CANCODER_ID = 3;
-  public static final double MODULE2_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE2_ANGLE_OFFSET = 6.5540; //TODO: Add this value
 
   public static final int MODULE3_DRIVE_MOTOR_ID = 15;
   public static final int MODULE3_ANGLE_MOTOR_ID = 11;
   public static final int MODULE3_ANGLE_CANCODER_ID = 4;
-  public static final double MODULE3_ANGLE_OFFSET = 0; //TODO: Add this value
+  public static final double MODULE3_ANGLE_OFFSET = 2.82; //TODO: Add this value
 
     public static int CANID0;
     public static int MODULE0DRIVEMOTORID = 0;
