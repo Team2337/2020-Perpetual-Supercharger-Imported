@@ -307,7 +307,6 @@ public class FXSwerveModule {
      */
     public void setModuleAngle(double targetAngle) {
         /* --- Local Variables --- */
-        double errorRad;
         double currentAngle = getNormalizedAnalogVoltageRadians();
         //double currentAngle = adjustAngleWithOffset();
         targetAngle = 0.84;
@@ -316,52 +315,74 @@ public class FXSwerveModule {
         //targetAngle = (targetAngle + this.angleMotorOffset) % (2 * Math.PI);
         SmartDashboard.putNumber("targetAngle/" + moduleNumber, targetAngle);
 
-        // Calculates error, 0 to 2PI
-        errorRad = (currentAngle - targetAngle + (2*Math.PI)) % (2*Math.PI);
-        // Sets error to error deadband
-        //errorRad = Math.abs(errorRad) < Math.toRadians(allowableErrorDegree) ? 0 : errorRad;
+
         
-        // Puts error behind current position if greater than PI
-        if (errorRad > Math.PI) {
-            errorRad -= (Math.PI*2);
-        } 
-        
-        
+        /*
         // Makes decsion on whether or not to invert drive motors
         if (errorRad > Math.PI/2 || errorRad < -Math.PI/2) {
             driveMotor.setInverted(true);
         } else {
             driveMotor.setInverted(false);
         }
+*/
 
 
-        // Converts the error to be in terms of quadrents and removes edge cases
-        if(errorRad > Math.PI/2 && errorRad < Math.PI) {
-            errorRad -= Math.PI;
-        } else if(errorRad < -Math.PI/2 && errorRad > -Math.PI) {
-            errorRad += Math.PI;
-        }
+        
 
-
-/*
-        // Calculates the speed of the angle motor using a derivative
-        double d = Robot.Utilities.calculateDerivative(errorRad, lastError, 0.02);
-        lastError = errorRad;
-        double speed = (errorRad * angleP) + (d * angleD);
-        setAngleMotorSpeed(speed);
-        */
-        SmartDashboard.putNumber("currentAngle/" + moduleNumber, currentAngle);
-
-         double targetInRadians = ((currentAngle - errorRad) + (2 * Math.PI)) % (Math.PI*2) ;
-         SmartDashboard.putNumber("targetInRadians/" + moduleNumber, targetInRadians);
+        double closest = setDirection(currentAngle, targetAngle);
+        System.out.println("setpoint: " + closest + "  in degrees "  + (closest*180)/Math.PI);
 
         //Convert radians into factor of 4096 to match the encoder
 
-       double targetTwo = ((targetInRadians * 4096) / (Math.PI*2));
-       SmartDashboard.putNumber("targetTwo/" + moduleNumber, targetTwo);
+        closest = closest + (2 * Math.PI) % (Math.PI*2) ;
+        System.out.println("setpoint: " + closest + "  in degrees "  + (closest*180)/Math.PI);
+        double targetTwo = ((closest * 4096) / (Math.PI*2));
+        System.out.println("Target in ticks:  " + targetTwo);
 
         setAngleMotorSpeed(targetTwo);
 
+    }
+
+    private double closestAngle(double current, double target)
+    {
+            // get errot
+            double err = target % (2*Math.PI) - current % (2*Math.PI);
+            System.out.println("error: " + err);
+            // convert from -360 to 360 to -180 to 180
+            if (Math.abs(err) > Math.PI)
+            {
+                err = -(Math.signum(err) * (2*Math.PI)) + err;
+            }
+            System.out.println("Closet angle: " + err  + "  in degrees " + (err*180)/Math.PI);
+            return err;
+    
+    }
+    
+    public double setDirection(double currentAngle, double target)
+    {
+        double angle;
+        double setpointAngle = closestAngle(currentAngle, target);
+        // find closest angle to setpoint + 180
+        double setpointAngleFlipped = closestAngle(currentAngle, target + Math.PI);
+        // if the closest angle to setpoint is shorter
+        if (Math.abs(setpointAngle) <= Math.abs(setpointAngleFlipped))
+        {
+            // unflip the motor direction use the setpoint
+            System.out.println("setInverted(true)");
+
+            angle = currentAngle + setpointAngle;
+            driveMotor.setInverted(true);
+        }
+        // if the closest angle to setpoint + 180 is shorter
+        else
+        {
+            // flip the motor direction and use the setpoint + 180
+            System.out.println("setInverted(false)");
+            angle = currentAngle + setpointAngleFlipped;
+            driveMotor.setInverted(false);
+        }  //System.out.println("targetangle: " + angle + "  in degrees " + (angle*180)/Math.PI);
+    return angle;
+    
     }
 
     /**
