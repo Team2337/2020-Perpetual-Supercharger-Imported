@@ -310,7 +310,7 @@ public class FXSwerveModule {
         double errorRad;
         double currentAngle = getNormalizedAnalogVoltageRadians();
         //double currentAngle = adjustAngleWithOffset();
-        targetAngle = 0.84;
+        //targetAngle = 0.84;
 
         // Adds angle offset to target angle
         //targetAngle = (targetAngle + this.angleMotorOffset) % (2 * Math.PI);
@@ -354,6 +354,11 @@ public class FXSwerveModule {
 
          double targetInRadians = ((currentAngle - errorRad) + (2 * Math.PI)) % (Math.PI*2) ;
          SmartDashboard.putNumber("targetInRadians/" + moduleNumber, targetInRadians);
+         if (targetInRadians < 0) {
+            targetInRadians += (2 * Math.PI);
+         } else if (targetInRadians > 2*Math.PI) {
+            targetInRadians -= (2 * Math.PI);
+         }
 
         //Convert radians into factor of 4096 to match the encoder
 
