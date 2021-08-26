@@ -466,8 +466,8 @@ public class FXSwerveModule {
      * @param speed - double value to set the speed to the angle motor (-1 -> 1)
      */
     public void setAngleMotorSpeed(double speed) {
-        //angleMotor.set(ControlMode.PercentOutput, speed);
-        angleMotor.set(ControlMode.Position, 1024);
+        angleMotor.set(ControlMode.PercentOutput, speed);
+        //angleMotor.set(ControlMode.Position, 1024);
     }
 
     /**
