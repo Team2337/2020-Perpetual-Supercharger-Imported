@@ -26,7 +26,7 @@ import frc.robot.subsystems.*;
  */
 public class Robot extends TimedRobot {
 // Variables for finding the Mac Address of the robot
-public static boolean isComp = false;  
+public static boolean isComp = true;  
 public String mac;
   public String gameData;
   private Command autonomousCommand;

@@ -10,7 +10,7 @@ package frc.robot;
  */
 public final class Constants {
     public final class Swerve {
-        public static final double GEARRATIO = 8.31;
+        public static final double GEARRATIO = 8.16;
         public static final double WHEELDIAMETER = 4;
         public static final double TICKSPERREVOLUTION = GEARRATIO * 4096;
         public static final double INCHESPERREVOLUTION = WHEELDIAMETER * Math.PI;
@@ -37,25 +37,26 @@ public final class Constants {
     /* --------------- */
     /*******************/
 
-  public static final int MODULE0_DRIVE_MOTOR_ID = 0;
-  public static final int MODULE0_ANGLE_MOTOR_ID = 4;
-  public static final int MODULE0_ANGLE_CANCODER_ID = 1;
-  public static final double MODULE0_ANGLE_OFFSET = -170.508; //TODO: Add this value
-
-  public static final int MODULE1_DRIVE_MOTOR_ID = 1;
-  public static final int MODULE1_ANGLE_MOTOR_ID = 5;
-  public static final int MODULE1_ANGLE_CANCODER_ID = 2;
-  public static final double MODULE1_ANGLE_OFFSET = -177; //TODO: Add this value
-
-  public static final int MODULE2_DRIVE_MOTOR_ID = 14;
-  public static final int MODULE2_ANGLE_MOTOR_ID = 10;
-  public static final int MODULE2_ANGLE_CANCODER_ID = 3;
-  public static final double MODULE2_ANGLE_OFFSET = -259.805; //TODO: Add this value
-
-  public static final int MODULE3_DRIVE_MOTOR_ID = 15;
-  public static final int MODULE3_ANGLE_MOTOR_ID = 11;
-  public static final int MODULE3_ANGLE_CANCODER_ID = 4;
-  public static final double MODULE3_ANGLE_OFFSET = -98.701; //TODO: Add this value
+    public static final int MODULE0_DRIVE_MOTOR_ID = 0;
+    public static final int MODULE0_ANGLE_MOTOR_ID = 4;
+    public static final int MODULE0_ANGLE_CANCODER_ID = 1;
+    public static final double MODULE0_ANGLE_OFFSET = 0; //TODO: Add this value
+  
+    public static final int MODULE1_DRIVE_MOTOR_ID = 1;
+    public static final int MODULE1_ANGLE_MOTOR_ID = 5;
+    public static final int MODULE1_ANGLE_CANCODER_ID = 2;
+    public static final double MODULE1_ANGLE_OFFSET = 2.3; //TODO: Add this value
+  
+    public static final int MODULE2_DRIVE_MOTOR_ID = 14;
+    public static final int MODULE2_ANGLE_MOTOR_ID = 10;
+    public static final int MODULE2_ANGLE_CANCODER_ID = 3;
+    public static final double MODULE2_ANGLE_OFFSET = 1.77; //TODO: Add this value
+  
+    public static final int MODULE3_DRIVE_MOTOR_ID = 15;
+    public static final int MODULE3_ANGLE_MOTOR_ID = 11;
+    public static final int MODULE3_ANGLE_CANCODER_ID = 4;
+    public static final double MODULE3_ANGLE_OFFSET = 1.482; //TODO: Add this value
+  
 
     public static int CANID0;
     public static int MODULE0DRIVEMOTORID = 0;

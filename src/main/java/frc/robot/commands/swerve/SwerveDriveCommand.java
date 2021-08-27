@@ -57,8 +57,8 @@ public class SwerveDriveCommand extends CommandBase {
       stationaryP = 0.007;
       movingP = 0.002;
     } else {
-      stationaryP = 0.015;
-      movingP = 0.007;
+      stationaryP = 0.007; //0.015
+      movingP = 0.002; //0.007
     }
     addRequirements(subsystem);
   }
@@ -103,6 +103,7 @@ public class SwerveDriveCommand extends CommandBase {
         error += 360;
       }
       rotation = Robot.OperatorAngleAdjustment.calculateGyroOffset(error, kP);
+      SmartDashboard.putNumber("Yaw Error", error);
     }
     
     // Checks the limelight mode to rotate towards the target
