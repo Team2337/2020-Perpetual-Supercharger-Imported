@@ -99,33 +99,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   public SwerveDrivetrain() {
     setDefaultCommand(new SwerveDriveCommand(this));
 
-
-      angleOffsets = new double[] {
-        /* -0.407217 + Math.PI,   // Module 0
-        2.2618739 + Math.PI,   // Module 1
-        -1.193802 + Math.PI,   // Module 2 
-        -0.746431 - Math.PI / 2   // Module 3  */
-        5.38,//4.6599803,//4.6524127,
-        1.37 + Math.PI, // 3.8954300 //3.8795141 //4.02862
-        3.29 + Math.PI, // 2.0473980 //2.0331746
-        1.25 //6.211150//0.3951469//0.3950974
-      };
-    
-    
-
-    analogAngleSensors = new AnalogInput[] {
-      new AnalogInput(0), // Module 0 
-      new AnalogInput(1), // Module 1 
-      new AnalogInput(2), // Module 2 
-      new AnalogInput(3)  // Module 3
-    };
-
-    CANAngleSensors = new CANCoder[] {
-      new CANCoder(1),
-      new CANCoder(2),
-      new CANCoder(3),
-      new CANCoder(4)
-    };
+  
 
     /* --- Array for modules --- */
     swerveModules = new FXSwerveModule[] {
@@ -341,8 +315,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     if (swerveDebug) {
       for(int i = 0; i < 4; i++) {
-      SmartDashboard.putNumber("ModuleAngle/" + i, 
-      ((getModule(i).getNormalizedAnalogVoltageRadians() - angleOffsets[i]) %(2 * Math.PI)) * 180 / Math.PI);
+     // SmartDashboard.putNumber("ModuleAngle/" + i, 
+     // ((getModule(i).getNormalizedAnalogVoltageRadians() - angleOffsets[i]) %(2 * Math.PI)) * 180 / Math.PI);
     }
   }
   for(int i = 0; i < 4; i++) {

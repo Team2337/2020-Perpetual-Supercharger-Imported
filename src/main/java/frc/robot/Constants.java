@@ -55,7 +55,7 @@ public final class Constants {
     public static final int MODULE3_DRIVE_MOTOR_ID = 15;
     public static final int MODULE3_ANGLE_MOTOR_ID = 11;
     public static final int MODULE3_ANGLE_CANCODER_ID = 4;
-    public static final double MODULE3_ANGLE_OFFSET = 1.482; //TODO: Add this value
+    public static final double MODULE3_ANGLE_OFFSET = 1.482; //1.482
   
 
     public static int CANID0;

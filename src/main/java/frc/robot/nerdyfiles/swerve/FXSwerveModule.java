@@ -47,27 +47,26 @@ public class FXSwerveModule {
      * This will reduce the oscillation on the angle motor
      * when within +- 3 degrees of the target
      */
-    private double allowableErrorDegree = 1;
-
+    
     /**
      * Proportional value for the drive motor speed
      * This is used to scale the error to a funcitonal speed for the motors
      */
     private double driveP = 15;
-
+    
     /**
      * Integral value for the drive motor speed
      * This value is used to reduce oscillation when sending the motor to a setpoint 
      */
     private double driveI = 0.01;
-
+    
     /**
      * Derivative value for the drive motor speed
      * This is added to the speed of the motors to increase power at 
      * smaller errors
      */
     private double driveD = 0.1;
-
+    
     /**
      * Feet Forward value for the drive motor speed
      * Sets the error to be higher than the actual error
@@ -75,7 +74,7 @@ public class FXSwerveModule {
      * be able to reach its setpoint
      */
     private double driveF = 0.2;
-
+    
     /**
      * Proportional value for the angle motor speed
      * This is used to scale the error to a funcitonal speed for the motors
@@ -87,11 +86,12 @@ public class FXSwerveModule {
      * This is added to the speed of the motors to increase power at 
      * smaller errors
      */
-    private double angleD = 0.02; //0.02
+    private double angleD = 0.04; //0.02
     
     /** Sets the max speed for the drive motors */
     private double driveMaxSpeed = 1.0;
-
+    
+    private double allowableErrorDegree = 3;
     private int angleAllowableClosedloopError = 5;
     private double talonAngleP = 1; //2.5
     private double talonAngleI = 0;
@@ -165,6 +165,7 @@ public class FXSwerveModule {
         TalonFXConfigurationAngle.slot0.allowableClosedloopError = angleAllowableClosedloopError;
         TalonFXConfigurationAngle.feedbackNotContinuous = true;
         TalonFXConfigurationAngle.openloopRamp = 0.15;
+        TalonFXConfigurationAngle.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180.Signed_PlusMinus180;
         
         TalonFXConfigurationAngle.remoteFilter0.remoteSensorDeviceID = CANAngleSensor.getDeviceID();
         TalonFXConfigurationAngle.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
@@ -270,7 +271,7 @@ public class FXSwerveModule {
     public double getNormalizedAnalogVoltage() {
         SmartDashboard.putNumber("Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition());
         SmartDashboard.putNumber("Mod of Absolute Position/" + moduleNumber, CANAngleSensor.getAbsolutePosition()%360);
-        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), 0, -360, 0, 1));
+        SmartDashboard.putNumber("Normalized CAN/" + moduleNumber, Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360, 0, 0, 1));
         SmartDashboard.putNumber("Angle In Radians/" + moduleNumber, angleMotorOffsetRadians);
         SmartDashboard.putNumber("FXEncoder Position/" + moduleNumber, angleMotor.getSelectedSensorPosition(0) % 2048);
         return Utilities.scaleToRange(-CANAngleSensor.getAbsolutePosition(), -360,0, 0, 1); 
@@ -311,6 +312,7 @@ public class FXSwerveModule {
         /* --- Local Variables --- */
         double errorRad;
         double currentAngle = getNormalizedAnalogVoltageRadians();
+        targetAngle = 1.5;
 
         // Adds angle offset to target angle
         targetAngle = (targetAngle + this.angleMotorOffsetRadians) % (2 * Math.PI);
@@ -334,16 +336,34 @@ public class FXSwerveModule {
 
         // Converts the error to be in terms of quadrents and removes edge cases
         if(errorRad > Math.PI/2 && errorRad < Math.PI) {
-            errorRad -= Math.PI;
+            targetAngle -= Math.PI;
         } else if(errorRad < -Math.PI/2 && errorRad > -Math.PI) {
-            errorRad += Math.PI;
+            targetAngle += Math.PI;
         }
 
         // Calculates the speed of the angle motor using a derivative
-        double d = Robot.Utilities.calculateDerivative(errorRad, lastError, 0.02);
+       /* double d = Robot.Utilities.calculateDerivative(errorRad, lastError, 0.02);
         lastError = errorRad;
         double speed = (errorRad * angleP) + (d * angleD);
-        setAngleMotorSpeed(speed);
+        setAngleMotorSpeed(speed); */
+
+        SmartDashboard.putNumber("currentAngle/" + moduleNumber, currentAngle);
+
+        // double targetInRadians = ((currentAngle - errorRad)) + (2 * Math.PI)) % (Math.PI*2) ;
+        // SmartDashboard.putNumber("targetInRadians/" + moduleNumber, targetInRadians);
+        if (targetAngle < 0) {
+            targetAngle += (2 * Math.PI);
+         } else if (targetAngle > 2*Math.PI) {
+            targetAngle -= (2 * Math.PI);
+         } 
+
+        //Convert radians into factor of 4096 to match the encoder
+
+       double targetTwo = ((targetAngle * 4096) / (Math.PI*2));
+       SmartDashboard.putNumber("targetTwo/" + moduleNumber, targetTwo);
+
+        setAngleMotorSpeed(targetTwo);
+
     }
 
     /**
@@ -351,8 +371,9 @@ public class FXSwerveModule {
      * @param speed - double value to set the speed to the angle motor (-1 -> 1)
      */
     public void setAngleMotorSpeed(double speed) {
-        angleMotor.set(ControlMode.PercentOutput, speed);
-        //angleMotor.set(ControlMode.Position, 1024);
+       // angleMotor.set(ControlMode.PercentOutput, speed);
+        SmartDashboard.putNumber("Speed/" + moduleNumber, speed);
+        angleMotor.set(ControlMode.Position, speed);
     }
 
     /**
